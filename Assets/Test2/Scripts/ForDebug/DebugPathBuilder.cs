@@ -22,7 +22,7 @@ public class DebugPathBuilder : MonoBehaviour
             nextRect.Parent = rect;
             Gizmos.DrawLine(child.position, nextChild.position);
         }
-        Gizmos.color = Color.red;
+        Gizmos.color = Color.green;
         for (int i = 0; i < _path.Count - 1; i++)
         {
             Gizmos.DrawLine(_path[i], _path[i + 1]);
