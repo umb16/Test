@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static UnityEditor.Progress;
 
@@ -7,6 +8,7 @@ public class DebugPathBuilder : MonoBehaviour
 {
     [SerializeField] private Transform _startPoint;
     [SerializeField] private Transform _endPoint;
+    [SerializeField] private List<Vector2> _path;
     private void OnDrawGizmos()
     {
 
@@ -16,17 +18,23 @@ public class DebugPathBuilder : MonoBehaviour
             Transform nextChild = transform.GetChild(i + 1);
             DebugRect rect = child.GetComponent<DebugRect>();
             DebugRect nextRect = nextChild.GetComponent<DebugRect>();
-            /*if (rect.Intersect(nextRect))
-                if (rect.Min.x == nextRect.Max.x || rect.Max.x == nextRect.Min.x)
-                    Gizmos.color = Color.red;
-                else*/
             Gizmos.color = Color.white * .5f;
             nextRect.Parent = rect;
             Gizmos.DrawLine(child.position, nextChild.position);
-
+        }
+        Gizmos.color = Color.red;
+        for (int i = 0; i < _path.Count - 1; i++)
+        {
+            Gizmos.DrawLine(_path[i], _path[i + 1]);
         }
     }
 
+    [ContextMenu("TestPathFind")]
+    private void TestPathFind()
+    {
+        _path = new PathFinder().GetPath(_startPoint.position, _endPoint.position, GetEdges()).ToList();
+
+    }
     private IEnumerable<Edge> GetEdges()
     {
         List<Edge> result = new List<Edge>();
